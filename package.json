@@ -1,0 +1,23 @@
+{
+    "name": "ansi-matrix",
+    "version": "0.1.0",
+    "description": "Draw and redraw a matrix in the terminal using ANSI escape sequences",
+    "homepage": "http://busterjs.org/docs/ansi-matrix",
+    "author": "Christian Johansen",
+    "contributors": {
+        "name": "Christian Johansen",
+        "email": "christian@cjohansen.no",
+        "url": "http://cjohansen.no"
+    },
+    "main": "./lib/ansi-matrix",
+    "scripts": {
+        "test": "node test/ansi-matrix-test.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/busterjs/ansi-matrix.git"
+    },
+    "devDependencies": {
+        "buster-node": "*"
+    }
+}
