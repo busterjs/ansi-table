@@ -1,5 +1,6 @@
 var buster = require("buster-node");
 var assert = buster.assert;
+var refute = buster.refute;
 var ansiMatrix = require("../lib/ansi-matrix");
 
 function cell(text, options) {
@@ -120,6 +121,58 @@ buster.testCase("ANSI matrix", {
             ["I", "J", "K"]
         ]);
 
-        assert.equals(newMatrix.toString(), "\x1b[3AF G H\nI J K\n");
+        assert.equals(newMatrix.toString(), "\x1b[2AF G H\nI J K\n");
+    },
+
+    "signals unchanged matrix": function () {
+        var data = [
+            ["A", "B", "C"],
+            ["D", "E", "F"]
+        ];
+        var matrix = ansiMatrix.draw(data, { cellSpacing: 1 });
+        var newMatrix = matrix.redraw(data);
+
+        refute(newMatrix.changed);
+    },
+
+    "redraws multiple times": function () {
+        var data = [["A", "B", "C"]];
+        var matrix = ansiMatrix.draw(data, { cellSpacing: 1 });
+        matrix = matrix.redraw([["B", "C", "D"]]);
+        matrix = matrix.redraw([["C", "D", "E"]]);
+
+        assert(matrix.changed);
+        assert.equals(matrix.toString(), "\x1b[1AC D E\n");
+    },
+
+    "redraws over empty matrix": function () {
+        var data = [];
+        var matrix = ansiMatrix.draw(data, { cellSpacing: 1 });
+        matrix = matrix.redraw([["A", "B", "C"]]);
+
+        assert(matrix.changed);
+        assert.equals(matrix.toString(), "\x1b[1AA B C\n");
+    },
+
+    "draws incomplete matrix": function () {
+        var data = [["A", "B", "C"], ["D"]];
+        var matrix = ansiMatrix.draw(data, { cellSpacing: 1 });
+
+        var lines = matrix.toString().split("\n");
+        assert.equals(matrix.toString(), "A B C\nD\n");
+    },
+
+    "draws matrix with effects": function () {
+        var data = [["A", "B", "C"], [{
+            toString: function () { return "D"; },
+            length: 3,
+            format: function (str) {
+                return str + "!";
+            }
+        }]];
+        var matrix = ansiMatrix.draw(data, { cellSpacing: 1 });
+
+        var lines = matrix.toString().split("\n");
+        assert.equals(matrix.toString(), "A   B C\nD! \n");
     }
 });
