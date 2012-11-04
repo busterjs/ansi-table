@@ -1,4 +1,4 @@
-var am = require("../lib/ansi-matrix");
+var am = require("../lib/ansi-table");
 
 var characters = ("abcdefghijklmnopqrstuvwxyz0123456789" +
                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ").split("");
@@ -8,14 +8,14 @@ var width = parseInt(process.argv[2] || 3, 10);
 var height = parseInt(process.argv[3] || 3, 10);
 var timeout = parseInt(process.argv[4] || 100, 10);
 var row;
-var matrix = am.draw([], { cellSpacing: 1 });
+var table = am.draw([], { cellSpacing: 1 });
 
 function rand(col) {
     return col[Math.floor(Math.random() * col.length)];
 }
 
 function print() {
-     process.stdout.write(matrix.toString());
+    process.stdout.write(table.toString());
 }
 
 print();
@@ -46,7 +46,7 @@ function addData() {
     }
 
     addRandomCharacter(row, rand(characters));
-    matrix = matrix.redraw(data);
+    table = table.redraw(data);
     print();
     setTimeout(addData, timeout);
 }
