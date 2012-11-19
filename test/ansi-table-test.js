@@ -38,6 +38,11 @@ buster.testCase("ANSI table", {
                       "Other    There is stuff\n");
     },
 
+    "draws empty columns": function () {
+        var table = ansiTable.draw([["Something", ""]]);
+        assert.equals(table.toString(), "Something\n");
+    },
+
     "spaces columns apart": function () {
         var table = ansiTable.draw([
             ["Something", "In here"],
